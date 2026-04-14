@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="dark">
+    <meta name="description" content="AS215932 (Hyrule Networks) -- IPv6-first autonomous system. ASN, prefix, peering policy, network topology, NOC contact.">
+    <title>AS215932 -- Hyrule Networks</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <header class="site">
+        <h1>AS215932 &mdash; Hyrule Networks</h1>
+        <p class="tag">IPv6-first autonomous system. Running in public.</p>
+        <nav class="menu" aria-label="primary">
+            <ul>
+                <li><a href="/" aria-current="page">home</a></li>
+                <li><a href="/network">network</a></li>
+                <li><a href="/peering">peering</a></li>
+                <li><a href="/prefixes">prefixes</a></li>
+                <li><a href="/lg">looking glass</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <h2>at a glance</h2>
+        <table>
+            <tr><th>ASN</th><td>AS215932 (RIPE)</td></tr>
+            <tr><th>Name</th><td>Hyrule Networks / Servify</td></tr>
+            <tr><th>Prefix</th><td>2a0c:b641:b50::/44</td></tr>
+            <tr><th>Address family</th><td>IPv6-only (NAT64 for legacy IPv4)</td></tr>
+            <tr><th>Peering policy</th><td>Open</td></tr>
+            <tr><th>NOC</th><td class="noc"><a href="mailto:noc@as215932.net">noc@as215932.net</a></td></tr>
+            <tr><th>PeeringDB</th><td><a href="https://www.peeringdb.com/asn/215932">peeringdb.com/asn/215932</a></td></tr>
+        </table>
+
+        <h2>network weathermap</h2>
+<pre class="weathermap" aria-label="ASCII weathermap">
+                 +--------------+       +--------------+
+Transit  ------&gt; |   cr1.nl1    | &lt;---&gt; |   cr1.de1    | &lt;------ Transit
+(AS34872 NL)     |  Servperso   |  wg   |  Servperso   |       (AS34872 DE,
+                 | FreeBSD+FRR  |       | FreeBSD+FRR  |        AS210233)
+                 +------+-------+       +-------+------+
+                        |                       |
+                        |          wg           |
+                        +-----------+-----------+
+                                    |
+                                    v
+                             +--------------+
+                             |     rtr      |       OVH FR
+                             | Debian+FRR   |      NAT64/DNS64
+                             +------+-------+
+                                    |
+                                    |  2a0c:b641:b50:2::/64
+                  +--------+--------+--------+--------+--------+
+                  |        |        |        |        |        |
+                  v        v        v        v        v        v
+                 dns      api      web     proxy     mon      vpn
+</pre>
+        <p class="muted">Full details on the <a href="/network">network</a> page.</p>
+
+        <h2>about</h2>
+        <p>AS215932 is a solo project to build and operate a full-stack
+        IPv6-first ISP from scratch: multi-homed BGP, RPKI, IRR, NAT64/DNS64
+        for legacy reachability. Configuration and runbooks are
+        <a href="https://github.com/svagner/hyrule-infra">public on GitHub</a>.</p>
+
+        <p>If you want to peer, see the <a href="/peering">peering</a> page.
+        For operational issues, email
+        <a class="noc" href="mailto:noc@as215932.net">noc@as215932.net</a>.</p>
+    </main>
+
+    <footer class="site">
+        <p>AS215932 &middot; Hyrule Networks &middot;
+           <a href="https://www.peeringdb.com/asn/215932">PeeringDB</a> &middot;
+           <a href="https://bgp.he.net/AS215932">HE BGP</a> &middot;
+           <a href="https://apps.db.ripe.net/db-web-ui/query?searchtext=AS215932">RIPE DB</a></p>
+        <p>no javascript &middot; ipv6-reachable &middot;
+           <a href="https://servify.network/">servify.network</a></p>
+    </footer>
+</body>
+</html>

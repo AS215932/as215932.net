@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="dark">
+    <meta name="description" content="AS215932 prefix allocations, RPKI, IRR, and external resources.">
+    <title>prefixes -- AS215932</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <header class="site">
+        <h1>AS215932 &mdash; Hyrule Networks</h1>
+        <p class="tag">prefixes / resources</p>
+        <nav class="menu" aria-label="primary">
+            <ul>
+                <li><a href="/">home</a></li>
+                <li><a href="/network">network</a></li>
+                <li><a href="/peering">peering</a></li>
+                <li><a href="/prefixes" aria-current="page">prefixes</a></li>
+                <li><a href="/lg">looking glass</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <h2>ipv6 allocation</h2>
+        <table>
+            <tr><th>prefix</th><th>use</th><th>rir</th></tr>
+            <tr><td>2a0c:b641:b50::/44</td><td>AS215932 aggregate</td><td>RIPE NCC</td></tr>
+        </table>
+
+        <h3>internal breakdown</h3>
+        <table>
+            <tr><th>subnet</th><th>purpose</th></tr>
+            <tr><td>2a0c:b641:b50::/128 &hellip; </td><td>Router loopbacks</td></tr>
+            <tr><td>2a0c:b641:b50:2::/64</td><td>Infrastructure VMs (OVH site)</td></tr>
+            <tr><td>2a0c:b641:b50:3::/64</td><td>VPN clients</td></tr>
+            <tr><td>2a0c:b641:b50:ff00::/56</td><td>WireGuard link /127s</td></tr>
+            <tr><td>2a0c:b641:b51::/48</td><td>Customer VMs (one /64 per VM)</td></tr>
+            <tr><td>2a0c:b641:b52::/48 &hellip;</td><td>Future expansion</td></tr>
+        </table>
+
+        <h2>ipv4</h2>
+        <p>AS215932 is an <strong>IPv6-only network</strong>. We do not hold
+        a portable IPv4 allocation. Legacy-IPv4 destinations are reached via
+        NAT64/DNS64 on the edge router using the well-known translation
+        prefix <code>64:ff9b::/96</code>.</p>
+
+        <h2>rpki / irr</h2>
+        <ul class="plain">
+            <li>ROAs published for all announced prefixes; max-length matches the announcement</li>
+            <li>IRR objects in the RIPE database: aut-num, route6, as-set</li>
+            <li>RPKI validation enforced on ingress from every transit peer</li>
+        </ul>
+
+        <h2>external records</h2>
+        <table>
+            <tr><th>source</th><th>link</th></tr>
+            <tr><td>PeeringDB</td><td><a href="https://www.peeringdb.com/asn/215932">peeringdb.com/asn/215932</a></td></tr>
+            <tr><td>RIPE Database</td><td><a href="https://apps.db.ripe.net/db-web-ui/query?searchtext=AS215932">apps.db.ripe.net AS215932</a></td></tr>
+            <tr><td>HE BGP Toolkit</td><td><a href="https://bgp.he.net/AS215932">bgp.he.net/AS215932</a></td></tr>
+            <tr><td>RIPE Stat</td><td><a href="https://stat.ripe.net/AS215932">stat.ripe.net/AS215932</a></td></tr>
+            <tr><td>bgp.tools</td><td><a href="https://bgp.tools/as/215932">bgp.tools/as/215932</a></td></tr>
+        </table>
+    </main>
+
+    <footer class="site">
+        <p>AS215932 &middot; Hyrule Networks &middot;
+           <a href="https://www.peeringdb.com/asn/215932">PeeringDB</a> &middot;
+           <a href="https://bgp.he.net/AS215932">HE BGP</a> &middot;
+           <a href="https://apps.db.ripe.net/db-web-ui/query?searchtext=AS215932">RIPE DB</a></p>
+        <p>no javascript &middot; ipv6-reachable &middot;
+           <a href="https://servify.network/">servify.network</a></p>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="dark">
+    <meta name="description" content="AS215932 network topology: core routers, WireGuard overlay, edge, routing stack.">
+    <title>network -- AS215932</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <header class="site">
+        <h1>AS215932 &mdash; Hyrule Networks</h1>
+        <p class="tag">network / topology</p>
+        <nav class="menu" aria-label="primary">
+            <ul>
+                <li><a href="/">home</a></li>
+                <li><a href="/network" aria-current="page">network</a></li>
+                <li><a href="/peering">peering</a></li>
+                <li><a href="/prefixes">prefixes</a></li>
+                <li><a href="/lg">looking glass</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <h2>weathermap</h2>
+<pre class="weathermap" aria-label="ASCII weathermap">
+                 +--------------+       +--------------+
+Transit  ------&gt; |   cr1.nl1    | &lt;---&gt; |   cr1.de1    | &lt;------ Transit
+(AS34872 NL)     |  Servperso   |  wg   |  Servperso   |       (AS34872 DE,
+                 | FreeBSD+FRR  |       | FreeBSD+FRR  |        AS210233)
+                 +------+-------+       +-------+------+
+                        |                       |
+                        |          wg           |
+                        +-----------+-----------+
+                                    |
+                                    v
+                             +--------------+
+                             |     rtr      |       OVH FR
+                             | Debian+FRR   |      NAT64/DNS64
+                             +------+-------+
+                                    |
+                                    |  2a0c:b641:b50:2::/64
+                  +--------+--------+--------+--------+--------+
+                  |        |        |        |        |        |
+                  v        v        v        v        v        v
+                 dns      api      web     proxy     mon      vpn
+</pre>
+
+        <h2>core routers</h2>
+        <table>
+            <tr><th>node</th><th>site</th><th>platform</th><th>overlay loopback</th></tr>
+            <tr><td>cr1.nl1</td><td>Servperso NL</td><td>FreeBSD + FRR</td><td>2a0c:b641:b50::a</td></tr>
+            <tr><td>cr1.de1</td><td>Servperso DE</td><td>FreeBSD + FRR</td><td>2a0c:b641:b50::b</td></tr>
+            <tr><td>rtr</td><td>OVH FR</td><td>Debian + FRR</td><td>2a0c:b641:b50::d</td></tr>
+        </table>
+
+        <h2>overlay</h2>
+        <p>Underlay (transit provider networks) is strictly separated from
+        the AS215932 overlay. Core routers are joined by a full WireGuard
+        mesh; iBGP and OSPFv3 run inside the tunnels.</p>
+        <ul class="plain">
+            <li>Overlay prefix: 2a0c:b641:b50::/44</li>
+            <li>WireGuard link /127s under 2a0c:b641:b50:ffXX::/127</li>
+            <li>WireGuard endpoints pinned to underlay addresses (never overlay)</li>
+            <li>OSPFv3 carries loopback reachability between routers</li>
+            <li>iBGP full-mesh carries customer / infra prefixes</li>
+        </ul>
+
+        <h2>edge (OVH FR)</h2>
+        <p>The <code>rtr</code> VM terminates transit on OVH and hosts the
+        infra subnet <code>2a0c:b641:b50:2::/64</code>. A dedicated overlay
+        VRF (table 200, via systemd-networkd) keeps transit and overlay
+        routing planes isolated. NAT64 (Jool) + DNS64 (Unbound) on rtr
+        provide IPv4 reachability for the IPv6-only fleet via the
+        well-known prefix <code>64:ff9b::/96</code>.</p>
+
+        <h2>routing policy</h2>
+        <ul class="plain">
+            <li>RPKI validation on all transit sessions</li>
+            <li>IRR objects registered in the RIPE database</li>
+            <li>AS-path filter drops own-ASN, private ASNs, and paths &gt; 200 chars</li>
+            <li>TRANSIT-IN / TRANSIT-OUT route-maps applied to every transit peer</li>
+            <li>Prefix-list <code>AS215932v6-out</code> enforces egress announcements</li>
+        </ul>
+
+        <h2>services on the fleet</h2>
+        <table>
+            <tr><th>host</th><th>role</th><th>address</th></tr>
+            <tr><td>dns</td><td>Authoritative DNS (Knot)</td><td>2a0c:b641:b50:2::10</td></tr>
+            <tr><td>api</td><td>hyrule-cloud + PostgreSQL</td><td>2a0c:b641:b50:2::20</td></tr>
+            <tr><td>web</td><td>Web frontend</td><td>2a0c:b641:b50:2::30</td></tr>
+            <tr><td>proxy</td><td>TLS reverse proxy (Caddy)</td><td>2a0c:b641:b50:2::40</td></tr>
+            <tr><td>mon</td><td>Monitoring (Icinga + Prometheus)</td><td>2a0c:b641:b50:2::50</td></tr>
+            <tr><td>vpn</td><td>WireGuard VPN</td><td>2a0c:b641:b50:2::60</td></tr>
+        </table>
+    </main>
+
+    <footer class="site">
+        <p>AS215932 &middot; Hyrule Networks &middot;
+           <a href="https://www.peeringdb.com/asn/215932">PeeringDB</a> &middot;
+           <a href="https://bgp.he.net/AS215932">HE BGP</a> &middot;
+           <a href="https://apps.db.ripe.net/db-web-ui/query?searchtext=AS215932">RIPE DB</a></p>
+        <p>no javascript &middot; ipv6-reachable &middot;
+           <a href="https://servify.network/">servify.network</a></p>
+    </footer>
+</body>
+</html>
