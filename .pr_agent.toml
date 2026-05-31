@@ -1,0 +1,37 @@
+# PR-Agent (advisory) configuration for AS215932/as215932.net.
+# Replaces hosted Sourcery. Runs only on the unprivileged hyrule-public-pr
+# runner with read/comment-only perms, on our OpenRouter key.
+
+[config]
+git_provider = "github"
+# deepseek-v4-flash / minimax-m2.7 are custom models -> need custom_model_max_tokens.
+model = "openrouter/deepseek/deepseek-v4-flash"
+fallback_models = ["openrouter/minimax/minimax-m2.7"]
+custom_model_max_tokens = 128000
+temperature = 0.2
+use_repo_settings_file = true
+publish_output = true
+
+[github_action_config]
+auto_review = true
+auto_describe = false
+auto_improve = true
+
+[pr_reviewer]
+require_security_review = true
+require_tests_review = false
+require_score_review = true
+extra_instructions = """
+This is as215932.net: the public AS215932 site (static HTML/CSS + deploy.sh).
+Lower risk than the app/infra repos — keep reviews brief. Flag:
+- unsafe HTML/DOM injection or inline event handlers / inline <script> that
+  trusts unescaped input;
+- secrets or tokens committed in client-side files;
+- incorrect or stale routing/peering/prefix/contact data (network.html,
+  peering.html, prefixes.html, lg.html) — these are public AS215932 facts;
+- changes to deploy.sh that could leak credentials or publish unreviewed content.
+Do not restate the diff.
+"""
+
+[pr_description]
+publish_description_as_comment = true
