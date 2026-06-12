@@ -26,34 +26,48 @@
     <main>
         <h2>weathermap</h2>
 <pre class="weathermap" aria-label="ASCII weathermap">
-                 +--------------+       +--------------+
-Transit  ------&gt; |   cr1.nl1    | &lt;---&gt; |   cr1.de1    | &lt;------ Transit
-(AS34872 NL)     |  Servperso   |  wg   |  Servperso   |       (AS34872 DE,
-                 | FreeBSD+FRR  |       | FreeBSD+FRR  |        AS210233)
-                 +------+-------+       +-------+------+
-                        |                       |
-                        |          wg           |
-                        +-----------+-----------+
-                                    |
-                                    v
-                             +--------------+
-                             |     rtr      |       OVH FR
-                             | Debian+FRR   |      NAT64/DNS64
-                             +------+-------+
-                                    |
-                                    |  2a0c:b641:b50:2::/64
-                  +--------+--------+--------+--------+--------+
-                  |        |        |        |        |        |
-                  v        v        v        v        v        v
-                 dns      api      web     proxy     mon      vpn
+               WireGuard full mesh: OSPF6 + iBGP inside tunnels
+
+          Transit NL          Transit DE             Securebit CH + SBIX
+           AS34872       AS34872 / AS210233             AS58057 / RS
+              |                  |                             |
+       +------+-----+     +------+-----+               +-------+------+
+       |  cr1.nl1   |=====|  cr1.de1   |===============|   cr1.ch1   |
+       |  ::a NL    |ff00 |  ::b DE    |     ff08      |   ::c CH    |
+       +--+------+--+     +--+------+--+               +---+-----+---+
+          |      \\          /      |                    //     |
+     ff02 |       \\ ff07   / ff08  | ff05          ff07//      | ff06
+          |        \\      /        |                //        |
+          +---------\\----/---------+---------------//---------+
+                     \\  /                         //
+                      \\/                         //
+                   +---+-------------------------+---+
+                   |          rtr / OVH FR ::d       |
+                   |          NAT64 + DNS64          |
+                   +---------------+-----------------+
+                                   |
+                        infra 2a0c:b641:b50:2::/64
+                         dns api web proxy mon vpn
 </pre>
 
         <h2>core routers</h2>
         <table>
-            <tr><th>node</th><th>site</th><th>platform</th><th>overlay loopback</th></tr>
-            <tr><td>cr1.nl1</td><td>Servperso NL</td><td>FreeBSD + FRR</td><td>2a0c:b641:b50::a</td></tr>
-            <tr><td>cr1.de1</td><td>Servperso DE</td><td>FreeBSD + FRR</td><td>2a0c:b641:b50::b</td></tr>
-            <tr><td>rtr</td><td>OVH FR</td><td>Debian + FRR</td><td>2a0c:b641:b50::d</td></tr>
+            <tr><th>node</th><th>site</th><th>platform</th><th>overlay loopback</th><th>external role</th></tr>
+            <tr><td>cr1.nl1</td><td>Servperso NL</td><td>FreeBSD + FRR</td><td>2a0c:b641:b50::a</td><td>AS34872 transit</td></tr>
+            <tr><td>cr1.de1</td><td>Servperso DE</td><td>FreeBSD + FRR</td><td>2a0c:b641:b50::b</td><td>AS34872 + AS210233 transit</td></tr>
+            <tr><td>cr1.ch1</td><td>Securebit CH</td><td>FreeBSD + FRR</td><td>2a0c:b641:b50::c</td><td>AS58057 transit + SBIX RS</td></tr>
+            <tr><td>rtr</td><td>OVH FR</td><td>Debian + FRR</td><td>2a0c:b641:b50::d</td><td>edge / NAT64</td></tr>
+        </table>
+
+        <h2>WireGuard mesh</h2>
+        <table>
+            <tr><th>tunnel</th><th>ports</th><th>link prefix</th></tr>
+            <tr><td>cr1.nl1 wg0 ↔ cr1.de1 wg0</td><td>1337 ↔ 1337</td><td>ff00::/127</td></tr>
+            <tr><td>cr1.nl1 wg3 ↔ rtr wg0</td><td>1340 ↔ 1337</td><td>ff02::/127</td></tr>
+            <tr><td>cr1.de1 wg1 ↔ rtr wg1</td><td>1338 ↔ 1338</td><td>ff05::/127</td></tr>
+            <tr><td>cr1.ch1 wg0 ↔ rtr wg2</td><td>1339 ↔ 1339</td><td>ff06::/127</td></tr>
+            <tr><td>cr1.nl1 wg4 ↔ cr1.ch1 wg1</td><td>1341 ↔ 1341</td><td>ff07::/127</td></tr>
+            <tr><td>cr1.de1 wg2 ↔ cr1.ch1 wg2</td><td>1342 ↔ 1342</td><td>ff08::/127</td></tr>
         </table>
 
         <h2>overlay</h2>

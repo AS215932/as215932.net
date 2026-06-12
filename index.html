@@ -37,26 +37,28 @@
 
         <h2>network weathermap</h2>
 <pre class="weathermap" aria-label="ASCII weathermap">
-                 +--------------+       +--------------+
-Transit  ------&gt; |   cr1.nl1    | &lt;---&gt; |   cr1.de1    | &lt;------ Transit
-(AS34872 NL)     |  Servperso   |  wg   |  Servperso   |       (AS34872 DE,
-                 | FreeBSD+FRR  |       | FreeBSD+FRR  |        AS210233)
-                 +------+-------+       +-------+------+
-                        |                       |
-                        |          wg           |
-                        +-----------+-----------+
-                                    |
-                                    v
-                             +--------------+
-                             |     rtr      |       OVH FR
-                             | Debian+FRR   |      NAT64/DNS64
-                             +------+-------+
-                                    |
-                                    |  2a0c:b641:b50:2::/64
-                  +--------+--------+--------+--------+--------+
-                  |        |        |        |        |        |
-                  v        v        v        v        v        v
-                 dns      api      web     proxy     mon      vpn
+               WireGuard full mesh: OSPF6 + iBGP inside tunnels
+
+          Transit NL          Transit DE             Securebit CH + SBIX
+           AS34872       AS34872 / AS210233             AS58057 / RS
+              |                  |                             |
+       +------+-----+     +------+-----+               +-------+------+
+       |  cr1.nl1   |=====|  cr1.de1   |===============|   cr1.ch1   |
+       |  ::a NL    |ff00 |  ::b DE    |     ff08      |   ::c CH    |
+       +--+------+--+     +--+------+--+               +---+-----+---+
+          |      \\          /      |                    //     |
+     ff02 |       \\ ff07   / ff08  | ff05          ff07//      | ff06
+          |        \\      /        |                //        |
+          +---------\\----/---------+---------------//---------+
+                     \\  /                         //
+                      \\/                         //
+                   +---+-------------------------+---+
+                   |          rtr / OVH FR ::d       |
+                   |          NAT64 + DNS64          |
+                   +---------------+-----------------+
+                                   |
+                        infra 2a0c:b641:b50:2::/64
+                         dns api web proxy mon vpn
 </pre>
         <p class="muted">Full details on the <a href="/network">network</a> page.</p>
 
