@@ -1,0 +1,35 @@
+name: ci
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    # Required gate: page structure, duplicate ids, local links and anchors.
+    name: lint
+    runs-on: [self-hosted, linux, x64, hyrule-public-pr]
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check site
+        run: python3 scripts/check_site.py
+
+  external-links:
+    # Advisory: third-party sites flap, so this never blocks a merge.
+    name: external-links
+    runs-on: [self-hosted, linux, x64, hyrule-public-pr]
+    timeout-minutes: 5
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check external links
+        run: python3 scripts/check_site.py --external
