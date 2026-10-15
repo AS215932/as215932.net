@@ -16,7 +16,7 @@ jobs:
   lint:
     # Required gate: page structure, duplicate ids, local links and anchors.
     name: lint
-    runs-on: [self-hosted, linux, x64, hyrule-public-pr]
+    runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@v4
@@ -26,7 +26,7 @@ jobs:
   external-links:
     # Advisory: third-party sites flap, so this never blocks a merge.
     name: external-links
-    runs-on: [self-hosted, linux, x64, hyrule-public-pr]
+    runs-on: ubuntu-latest
     timeout-minutes: 5
     continue-on-error: true
     steps:
