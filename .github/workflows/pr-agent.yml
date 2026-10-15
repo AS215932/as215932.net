@@ -36,7 +36,7 @@ jobs:
     timeout-minutes: 12
     steps:
       - name: PR-Agent
-        uses: The-PR-Agent/pr-agent@0bd56c0508504c718cc03d504cd4ceb6725ba3c7  # v0.35.0
+        uses: The-PR-Agent/pr-agent@8e5a9295973b24af4b70cafd0b660a230811ef9e  # v0.47.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           OPENROUTER__KEY: ${{ secrets.OPENROUTER_API_KEY }}
